@@ -74,4 +74,4 @@ https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"`
 
 Όλα τα δεδομένα της εφαρμογής, εκτός απο το container αποθηκεύονται και σε έναν τοπικό φάκελο **data**, ο οποίος δημιουργείται αυτόματα όταν εκτελούμε την εντολή : `docker-compose up -d ` , για να μην διαγραφούν τα δεδομένα σε περίπτωση που γίνει κάτι στο container της βάσης δεδομένων. 
 
-## Marina Loulaki
+
