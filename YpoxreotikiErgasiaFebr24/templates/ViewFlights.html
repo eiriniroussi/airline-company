@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/nav.css">
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+  <title> DS AIRLINES </title>
+  <link rel="icon" href="../static/img/tab_image.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .reservation-table {
+      margin: 20px auto;
+      overflow-x: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    table th,
+    table td {
+      padding: 15px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #005f73;
+      color: #ffffff;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #e0f2fe;
+    }
+
+    table tbody tr:hover {
+      background-color: #b2ebf2;
+      /* More noticeable hover effect */
+    }
+
+    .book-btn {
+      background-color: #008cba;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    .book-btn:hover {
+      background-color: #041f29;
+    }
+
+    .book-btn-last {
+      background-color: #bc1212;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+      border: 1px solid #bc1212;
+    }
+
+    .book-btn-last:hover {
+      color: #bc1212;
+      background-color: white;
+      border: 1px solid #bc1212;
+    }
+
+    @media screen and (max-width: 768px) {
+      .nav_links a {
+        display: block;
+        margin: 5px 0;
+      }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
+
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      tr {
+        border: 1px solid #ccc;
+      }
+
+      td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+
+      td:before {
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        content: attr(data-label);
+      }
+    }
+
+    .no-flights-found {
+      background-color: #ffcccc;
+      color: #cc0000;
+      font-size: 1.2em;
+      text-align: center;
+      padding: 20px 0;
+      border: 1px solid #cc0000;
+    }
+
+    .no-flights-found:hover {
+      background-color: #ffe5e5;
+    }
+  </style>
+
+</head>
+
+<body>
+  <header>
+    <nav>
+
+      <div class="logo">
+        <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+      </div>
+      <!-- menu links -->
+      <ul class="nav_links">
+        <li><a href="/">Home</a></li>
+        <li><a href="search_flights">Flights</a></li>
+
+        <li><a href="aboutus">About Us</a></li>
+        <li><a href="contact">Contact Us</a></li>
+
+        {% if session.get('user_email') %}
+        <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+        {% elif session.get('admin_email') %}
+        <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+        {% else %}
+        <li><a href="{{ url_for('login') }}">Account</a></li>
+        {% endif %}
+      </ul>
+      <!-- end menu links -->
+
+
+      <div class="lines">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <br>
+
+    <body>
+      <h1>View Flights</h1>
+      <div class="reservation-table">
+        <table>
+          <thead>
+
+            <tr>
+              <th>Flight Code</th>
+              <th>Departure Airport</th>
+              <th>Arrival Airport</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Economy</th>
+              <th>Premium</th>
+              <th>Business</th>
+              <th>Flight Duration</th>
+              <th>Available Seats</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if flights %}
+            {% for flight in flights %}
+            <tr>
+              <td>{{ flight['flightNumber'] }}</td>
+              <td>{{ flight['departure'] }}</td>
+              <td>{{ flight['destination'] }}</td>
+              <td>{{ flight['dateOfFlight'] }}</td>
+              <td>{{ flight['hourOfDeparture'] }}</td>
+              <td>{{ flight['costEconomy'] }}</td>
+              <td>{{ flight['costPremium'] }}</td>
+              <td>{{ flight['costBusiness'] }}</td>
+              <td>{{ flight['flightDuration'] }}</td>
+              <td>{{ flight['seatsAvailable'] }}</td>
+              <td>
+                {% if session.get('user_email') %}
+                {% if flight['seatsAvailable'] == 0 %}
+                <button class="book-btn-last" disabled>Sold Out</button>
+                {% elif flight['seatsAvailable'] < 5 %} <form method="POST" action="flightsBooking">
+                  <input type="hidden" name="flightNumber" value="{{ flight['flightNumber'] }}">
+                  <input type="submit" class="book-btn-last" value="Last Tickets">
+                  </form>
+                  {% else %}
+                  <form method="POST" action="flightsBooking">
+                    <input type="hidden" name="flightNumber" value="{{ flight['flightNumber'] }}">
+                    <input type="submit" class="book-btn" value="Book Now">
+                  </form>
+                  {% endif %}
+                  {% else %}
+                  <button class="book-btn" onclick="location.href='/login'">Sign In to Book</button>
+                  {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr class="no-flights-found">
+              <td colspan="11">There were no flights based on this criteria</td>
+            </tr>
+            {% endif %}
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Τέλος προσθήκης κώδικα -->
+      <br />
+  </main>
+
+  <footer>
+    &copy; Copyright 2024 | Designed by LM
+  </footer>
+
+
+
+  <!-- MENU JS -->
+  <script src="../static/js/mobile-menu.js"></script>
+</body>
+
+</html>

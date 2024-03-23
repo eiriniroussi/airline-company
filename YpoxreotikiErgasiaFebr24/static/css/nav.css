@@ -1,0 +1,185 @@
+* {
+    margin: 0px;
+    margin-bottom: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: #CECECE;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 7vh;
+    background-color: #083143;
+    font-family: 'PT Sans', sans-serif;
+
+}
+
+.logo {
+    color: white;
+    letter-spacing: 5px;
+    font-size: 18px;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    margin-top: 22px;
+
+}
+
+.logo a:hover {
+    font-size: 18.5px;
+    color: white;
+
+}
+
+.nav_links {
+    display: flex;
+    justify-content: space-around;
+    width: 50% ;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.nav_links li {
+    list-style: none;
+}
+
+.nav_links a {
+    color: white;
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-size: 13px !important;
+}
+
+.nav_links a:hover {
+    color: cyan;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.lines {
+    display: none;
+}
+
+.lines div {
+    width: 25px;
+    height: 3px;
+    margin: 5px;
+    background-color: white;
+    transition: all 0.35s ease;
+}
+
+header {
+    display: grid;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+footer {
+    bottom: 0;
+    /* position: fixed; */
+    width: 100%;
+    text-align: center;
+    background-color: #083143;
+    color: white;
+    padding: 10px;
+}
+
+
+main {
+    background-color: #CECECE;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100%;
+
+    font-size: 18px;
+    font-family: 'PT Sans', sans-serif;
+}
+
+/* tablet */
+@media screen and (min-width:781px) and (max-width:1100px) {
+    .nav_links {
+        width: 60%
+    }
+}
+
+/* mobile */
+@media screen and (max-width:780px) {
+    body {
+        /* Για να μην μπορουμε να κανουμε scroll και να δούμε το μενου όταν είναι κρυμμένο */
+        overflow-x: hidden;
+    }
+
+    .nav_links {
+        width: 40%;
+        background-color: #083143;
+        position: absolute;
+        right: 0px;
+        height: 92vh;
+        top: 7vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Βγάζει τελείως εκτός οθόνης το μενού στο κινητό */
+        transform: translateX(100%);
+        transition: transform 0.6s ease-in;
+    }
+
+    /* Να μην φαίνονται τα γράμματα αρχικά */
+    .nav_links li {
+        opacity: 0;
+    }
+
+    .lines {
+        display: block;
+    }
+
+    .nav_active {
+        z-index: 2;
+    }
+
+}
+
+/* Εμφανιζονται τωρα τα γράμματα των link */
+.nav_active {
+    transform: translateX(0%);
+}
+
+@keyframes navLinkFade {
+    from {
+        /* Ομαλό άνοιγμα menu */
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        /* Ομαλό κλείσιμο */
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+/* Αλλαγη των γραμμων σε x οταν ανοιγει το menu */
+.closenav .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+/* Αφου το χ εχει 2 γραμμες η 1 πρεπει να μην φαινεται */
+.closenav .line2 {
+    opacity: 0;
+}
+
+.closenav .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}

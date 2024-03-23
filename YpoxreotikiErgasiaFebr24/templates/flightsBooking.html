@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link rel="stylesheet" href="../static/css/custom.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        #only input {
+            width: 65%;
+        }
+
+        .seat.booked label {
+            background-color: #ccc;
+            text-decoration: line-through;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Validate form submission
+            const bookingForm = document.querySelector("form");
+            bookingForm.addEventListener("submit", function (event) {
+                // Ensure at least one seat is selected
+                const checkedBoxes = document.querySelectorAll('.seat input[type="checkbox"]:checked');
+                if (checkedBoxes.length === 0) {
+                    alert("Please select at least one seat.");
+                    event.preventDefault(); // Prevent form submission
+                    return;
+                }
+
+                // Validate passenger details
+                for (let i = 1; i <= checkedBoxes.length; i++) {
+                    if (!validatePassengerDetails(i)) {
+                        event.preventDefault(); // Prevent form submission
+                        return;
+                    }
+                }
+
+                // Validate credit card information
+                if (!validateCreditCardInfo()) {
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        });
+
+        function validatePassengerDetails(passengerNumber) {
+            const fname = document.getElementById(`fname${passengerNumber}`).value.trim();
+            const lname = document.getElementById(`lname${passengerNumber}`).value.trim();
+            const email = document.getElementById(`email${passengerNumber}`).value.trim();
+            const tel = document.getElementById(`tel${passengerNumber}`).value.trim();
+            const pass = document.getElementById(`pass${passengerNumber}`).value.trim();
+
+            if (fname === "" || lname === "" || email === "" || tel === "" || pass === "") {
+                alert(`Please fill out all fields for Passenger ${passengerNumber}.`);
+                return false;
+            }
+            return true;
+        }
+
+        function validateCreditCardInfo() {
+            const cardNumber = document.getElementById('cardnumber').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+            const expDate = new Date(document.getElementById('expDate').value);
+            const currentDate = new Date();
+
+            if (cardNumber.length !== 16) {
+                alert("Credit card number must be 16 digits.");
+                return false;
+            }
+
+            if (cvv.length !== 3) {
+                alert("CVV must be 3 digits.");
+                return false;
+            }
+
+            if (expDate < currentDate) {
+                alert("Expiration date has passed.");
+                return false;
+            }
+
+            return true;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch seat costs directly from the form inputs
+            const costEconomy = parseFloat(document.getElementById('economy').dataset.cost);
+            const costPremium = parseFloat(document.getElementById('premium').dataset.cost);
+            const costBusiness = parseFloat(document.getElementById('business').dataset.cost);
+
+            const checkboxes = document.querySelectorAll('.seat input[type="checkbox"]');
+            const maxChecked = 4;
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    let checkedBoxes = document.querySelectorAll('.seat input[type="checkbox"]:checked');
+                    if (checkedBoxes.length > maxChecked) {
+                        alert("You can only select up to 4 seats.");
+                        checkbox.checked = false; // Revert the selection if limit is exceeded
+                        return; // Exit the function to prevent further execution
+                    }
+                    updatePassengerForms(checkedBoxes, costEconomy, costPremium, costBusiness);
+                });
+            });
+        });
+
+        function updatePassengerForms(checkedBoxes, costEconomy, costPremium, costBusiness) {
+            let totalCost = 0;
+
+            // Reset and hide all forms first
+            for (let i = 1; i <= 4; i++) {
+                let form = document.getElementById(`passenger-details-${i}`);
+                form.style.display = 'none'; // Hide the form
+                document.getElementById(`type${i}`).value = '';
+                document.getElementById(`seat${i}`).value = '';
+                document.getElementById(`cost${i}`).value = ''; // Reset seat cost
+            }
+
+            // Show forms and update details based on selected seats
+            checkedBoxes.forEach(function (box, index) {
+                let formId = index + 1;
+                let form = document.getElementById(`passenger-details-${formId}`);
+                let ticketTypeInput = document.getElementById(`type${formId}`);
+                let seatNumberInput = document.getElementById(`seat${formId}`);
+                let costInput = document.getElementById(`cost${formId}`);
+                let seatClass = box.closest('li').className;
+                let seatCost = 0;
+
+                form.style.display = 'block'; // Show the form
+                seatNumberInput.value = box.id; // Set seat number
+
+                if (seatClass.includes('business')) {
+                    ticketTypeInput.value = 'Business';
+                    seatCost = costBusiness;
+                } else if (seatClass.includes('premium')) {
+                    ticketTypeInput.value = 'Premium';
+                    seatCost = costPremium;
+                } else if (seatClass.includes('economy')) {
+                    ticketTypeInput.value = 'Economy';
+                    seatCost = costEconomy;
+                }
+                costInput.value = seatCost.toFixed(2); // Format to 2 decimal places
+                totalCost += seatCost; // Accumulate total cost
+            });
+
+            // Display total cost formatted to 2 decimal places
+            document.getElementById('totalCost').value = totalCost.toFixed(2);
+        }
+
+    </script>
+
+
+
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+        <!-- Αρχή προσθήκης κώδικα -->
+
+        <!-- Flight Information -->
+
+
+        <div class="h-100 p-5 bg-light border rounded-3 container" style="margin-bottom:50px">
+            <div class="card-body">
+
+                <h2 class="card-title">Information about your trip 🛩️</h2>
+                <h6 class="card-subtitle mb-3 text-muted">Flight details</h6>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-auto">
+                        <label for="flightNumber" class="col-form-label">Flight Number</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="flightNumber" class="form-control" name="flightNumber"
+                            value="{{ flight['flightNumber'] }}" readonly>
+                    </div>
+
+                    <div class="col-auto">
+                        <label for="from" class="col-form-label">From</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="from" class="form-control" value="{{ flight['departure'] }}" readonly>
+                    </div>
+                    <div class="col-auto">
+                        <label for="to" class="col-form-label">To</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="to" class="form-control" value="{{ flight['destination'] }}" readonly>
+                    </div>
+
+
+
+                </div>
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-auto">
+                        <label for="flightDate" class="col-form-label">Date</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="flightDate" class="form-control" value="{{ flight['dateOfFlight'] }}"
+                            readonly>
+                    </div>
+                    <div class="col-auto">
+                        <label for="flightTime" class="col-form-label">Departure</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="flightTime" class="form-control" value="{{ flight['hourOfDeparture'] }}"
+                            readonly>
+                    </div>
+
+                </div>
+
+                <div id="only" class="row g-3 align-items-center mb-3">
+
+                    <div class="col-auto">
+                        <label for="economy" class="col-form-label">Economy Fair</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="economy" class="form-control" value="{{ flight['costEconomy'] }}"
+                            data-cost="{{ flight['costEconomy'] }}" readonly>
+                    </div>
+                    <div class="col-auto">
+                        <label for="premium" class="col-form-label">Premium Fair</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="premium" class="form-control" value="{{ flight['costPremium'] }}"
+                            data-cost="{{ flight['costPremium'] }}" readonly>
+                    </div>
+                    <div class="col-auto">
+                        <label for="business" class="col-form-label">Business Fair</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="business" class="form-control" value="{{ flight['costBusiness'] }}"
+                            data-cost="{{ flight['costBusiness'] }}" readonly>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+
+        <!-- Seat selection and checkout -->
+        <div class=" container ">
+            <div class=" row align-items-start">
+                <div class="col-5 plane border border-secondary rounded-bottom" style="margin-left:0">
+                    <div class="select">
+                        <h1>Please select seat</h1>
+                    </div>
+                    <div class="exit"></div>
+                    <form action="/reserve" method="post">
+                        <input type="hidden" name="flightNumber" value="{{ flight['flightNumber'] }}">
+                        <input type="hidden" name="from" class="form-control" value="{{ flight['departure'] }}">
+                        <input type="hidden" name="to" class="form-control" value="{{ flight['destination'] }}">
+                        <input type="hidden" name="flightDate" class="form-control"
+                            value="{{ flight['dateOfFlight'] }}">
+                        <input type="hidden" name="flightTime" class="form-control"
+                            value="{{ flight['hourOfDeparture'] }}">
+                        <ol>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat business">
+                                        <input id="A1" type="checkbox">
+                                        <label for="A1">A1</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="A2" type="checkbox">
+                                        <label for="A2">A2</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="A3" type="checkbox">
+                                        <label for="A3">A3</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="A4" type="checkbox">
+                                        <label for="A4">A4</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="A5" type="checkbox">
+                                        <label for="A5">A5</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="A6" type="checkbox">
+                                        <label for="A6">A6</label>
+
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat business">
+                                        <input id="B1" type="checkbox">
+                                        <label for="B1">B1</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="B2" type="checkbox">
+                                        <label for="B2">B2</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="B3" type="checkbox">
+                                        <label for="B3">B3</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="B4" type="checkbox">
+                                        <label for="B4">B4</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="B5" type="checkbox">
+                                        <label for="B5">B5</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="B6" type="checkbox">
+                                        <label for="B6">B6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat business">
+                                        <input id="C1" type="checkbox">
+                                        <label for="C1">C1</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="C2" type="checkbox">
+                                        <label for="C2">C2</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="C3" type="checkbox">
+                                        <label for="C3">C3</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="C4" type="checkbox">
+                                        <label for="C4">C4</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="C5" type="checkbox">
+                                        <label for="C5">C5</label>
+
+                                    </li>
+                                    <li class="seat business">
+                                        <input id="C6" type="checkbox">
+                                        <label for="C6">C6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat premium">
+                                        <input id="D1" type="checkbox">
+                                        <label for="D1">D1</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="D2" type="checkbox">
+                                        <label for="D2">D2</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="D3" type="checkbox">
+                                        <label for="D3">D3</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="D4" type="checkbox">
+                                        <label for="D4">D4</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="D5" type="checkbox">
+                                        <label for="D5">D5</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="D6" type="checkbox">
+                                        <label for="D6">D6</label>
+
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat premium">
+                                        <input id="E1" type="checkbox">
+                                        <label for="E1">E1</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="E2" type="checkbox">
+                                        <label for="E2">E2</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="E3" type="checkbox">
+                                        <label for="E3">E3</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="E4" type="checkbox">
+                                        <label for="E4">E4</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="E5" type="checkbox">
+                                        <label for="E5">E5</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="E6" type="checkbox">
+                                        <label for="E6">E6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat premium">
+                                        <input id="F1" type="checkbox">
+                                        <label for="F1">F1</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="F2" type="checkbox">
+                                        <label for="F2">F2</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="F3" type="checkbox">
+                                        <label for="F3">F3</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="F4" type="checkbox">
+                                        <label for="F4">F4</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="F5" type="checkbox">
+                                        <label for="F5">F5</label>
+
+                                    </li>
+                                    <li class="seat premium">
+                                        <input id="F6" type="checkbox">
+                                        <label for="F6">F6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat economy">
+                                        <input id="G1" type="checkbox">
+                                        <label for="G1">G1</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="G2" type="checkbox">
+                                        <label for="G2">G2</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="G3" type="checkbox">
+                                        <label for="G3">G3</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="G4" type="checkbox">
+                                        <label for="G4">G4</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="G5" type="checkbox">
+                                        <label for="G5">G5</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="G6" type="checkbox">
+                                        <label for="G6">G6</label>
+
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat economy">
+                                        <input id="H1" type="checkbox">
+                                        <label for="H1">H1</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="H2" type="checkbox">
+                                        <label for="H2">H2</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="H3" type="checkbox">
+                                        <label for="H3">H3</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="H4" type="checkbox">
+                                        <label for="H4">H4</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="H5" type="checkbox">
+                                        <label for="H5">H5</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="H6" type="checkbox">
+                                        <label for="H6">H6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <ol class="seats">
+                                    <li class="seat economy">
+                                        <input id="I1" type="checkbox">
+                                        <label for="I1">I1</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="I2" type="checkbox">
+                                        <label for="I2">I2</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="I3" type="checkbox">
+                                        <label for="I3">I3</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="I4" type="checkbox">
+                                        <label for="I4">I4</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="I5" type="checkbox">
+                                        <label for="I5">I5</label>
+
+                                    </li>
+                                    <li class="seat economy">
+                                        <input id="I6" type="checkbox">
+                                        <label for="I6">I6</label>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                        <div class="exit"></div>
+                </div>
+                <div class="col-6 border border-secondary rounded alert alert-primary" style="padding:20px">
+                    <h2 class="text-center mb-3">Passenger details</h2>
+
+                    <!-- First passenger details -->
+
+                    <div id="passenger-details-1" style="display: none;">
+                        <div class="row mb-3">
+                            <h2 class="text-center mb-3">First Passenger details</h2>
+
+                            <div class="col">
+                                <input type="text" class="form-control" id="fname1" name="fname1"
+                                    placeholder="First name" aria-label="First name">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="lname1" name="lname1"
+                                    placeholder="Last name" aria-label="Last name">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="tel" class="form-control" id="tel1" name="tel1" placeholder="Telephone"
+                                    aria-label="Telephone">
+                            </div>
+                            <div class="col">
+                                <input type="email" class="form-control" id="email1" name="email1" placeholder="Email"
+                                    aria-label="Email">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="pass1" name="pass1"
+                                    placeholder="Passport number" aria-label="Passport number">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="type1" name="type1"
+                                    placeholder="Ticket type" aria-label="Ticket type" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="seat1" name="seat1"
+                                    placeholder="Seat number" aria-label="Seat number" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="cost1" aria-label="Seat cost" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Second passenger details -->
+                    <div id="passenger-details-2" style="display: none;">
+                        <h2 class="text-center mb-3">Second Passenger details</h2>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="fname2" name="fname2"
+                                    placeholder="First name" aria-label="First name">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="lname2" name="lname2"
+                                    placeholder="Last name" aria-label="Last name">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="pass2" name="pass2"
+                                    placeholder="Passport number" aria-label="Passport number">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="type2" name="type2"
+                                    placeholder="Ticket type" aria-label="Ticket type" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="seat2" name="seat2"
+                                    placeholder="Seat number" aria-label="Seat number" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="cost2" aria-label="Seat cost" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Third passenger details -->
+                    <div id="passenger-details-3" style="display: none;">
+                        <h2 class="text-center mb-3">Third Passenger details</h2>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="fname3" name="fname3"
+                                    placeholder="First name" aria-label="First name">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="lname3" name="lname3"
+                                    placeholder="Last name" aria-label="Last name">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="pass3" name="pass3"
+                                    placeholder="Passport number" aria-label="Passport number">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="type3" name="type3"
+                                    placeholder="Ticket type" aria-label="Ticket type" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="seat3" name="seat3"
+                                    placeholder="Seat number" aria-label="Seat number" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="cost3" aria-label="Seat cost" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fourth passenger details -->
+                    <div id="passenger-details-4" style="display: none;">
+                        <h2 class="text-center mb-3">Fourth Passenger details</h2>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="fname4" name="fname4"
+                                    placeholder="First name" aria-label="First name">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="lname4" name="lname4"
+                                    placeholder="Last name" aria-label="Last name">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="pass4" name="pass4"
+                                    placeholder="Passport number" aria-label="Passport number">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="type4" name="type4"
+                                    placeholder="Ticket type" aria-label="Ticket type" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="seat4" name="seat4"
+                                    placeholder="Seat number" aria-label="Seat number" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="cost4" aria-label="Seat cost" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-center mb-3">Payment</h2>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <select class="form-select" name="cardType" required>
+                                <option selected>Card type</option>
+                                <option value="Visa">Visa</option>
+                                <option value="Mastercard">Mastercard</option>
+                                <option value="American Express">American Express</option>
+                                <option value="Discover">Discover</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input type="tel" class="form-control" id="cardnumber" name="cardnumber"
+                                placeholder="Card number" aria-label="Card number" maxlength="16"
+                                oninput="validateNumericInput(this);" required>
+
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="tel" class="form-control" id="cvv" name="cvv" placeholder="CVV"
+                                aria-label="CVV" maxlength="3" oninput="validateNumericInput(this);" required>
+
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control form-control-sm " id="expDate" name="expDate"
+                                placeholder="Expiration date" aria-label="Expiration date" data-form-type="date"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" class="form-control" id="totalCost" name="totalCost"
+                                placeholder="Total cost" aria-label="Total cost" readonly required>
+                        </div>
+                    </div>
+                    {% if user_points >= 1000 %}
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="use_points" id="usePoints">
+                                <label class="form-check-label" for="usePoints">
+                                    Use 1000 points for a €10 discount.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-primary"><strong>BOOK
+                                    TICKETS</strong></button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div id="bookedSeatsData" data-booked-seats="{{ booked_seats }}" style="display: none;"></div>
+
+        <!-- Τέλος προσθήκης κώδικα -->
+        <br />
+    </main>
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+
+
+    <!-- MENU JS -->
+    <script src="../static/js/mobile-menu.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const bookedSeatsDataElement = document.getElementById('bookedSeatsData');
+            console.log(bookedSeatsDataElement);
+            if (bookedSeatsDataElement) {
+                const bookedSeatsData = bookedSeatsDataElement.getAttribute('data-booked-seats');
+                // Log the raw JSON string to the console
+                console.log("Raw bookedSeatsData:", bookedSeatsDataElement);
+
+                const bookedSeats = JSON.parse(bookedSeatsData);
+                // Log the parsed array to the console
+                console.log("Parsed bookedSeats:", bookedSeats);
+
+                bookedSeats.forEach(seatNumber => {
+                    const seatCheckbox = document.getElementById(seatNumber);
+                    if (seatCheckbox) {
+                        seatCheckbox.disabled = true;
+                        seatCheckbox.closest('li').classList.add('booked');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

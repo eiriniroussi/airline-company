@@ -1,0 +1,84 @@
+/*Breadcrumbs*/
+nav.nav-breadcrumb {background-color: #fff;margin-top:-30px;margin-bottom:30px}
+
+/*Contact*/
+.contact-hero {background-image:url("../img/newYork.jpg");color:white;margin-top:-28px;margin-bottom:30px;min-height:350px}
+
+/*About us*/
+.carousel-item, .carousel-inner, .carousel-img{min-height:400px !important}
+#myCarousel {margin-top:-28px; padding-bottom:50px;min-height:400px}
+.mg-top-bottom{margin-top:100px;margin-bottom:100px}
+.mg-top{margin-top:100px}
+.plane{margin:20px auto;max-width:200px;background:#fff; border-top-left-radius: 50%; border-top-right-radius: 50%;min-height:855px}
+.select {height:250px;position: relative;overflow: hidden;text-align: center;}
+.select h1 {width: 60%;margin: 100px auto 35px auto;}
+.exit{height:50px;position: relative;}
+.exit:before, .exit:after{
+    content: 'EXIT';
+    font-size: 14px;
+    line-height: 18px;
+    padding:0px 2px 2px 2px;
+    display:block;
+    position:absolute;
+    background-color:red;
+    color:white;
+    top:50%;
+    transform:translate(0, -50%);
+    border-radius:5px}
+.exit:before{left:10px}
+.exit:after{right:10px}
+ol{list-style-type: none;padding:0;margin:0}
+.seats{display:flex;flex-direction: row;flex-wrap: nowrap;justify-content: flex-start;}
+.seat {display: flex;flex: 0 0 14.28%;padding:5px;}
+
+.seat.business label {
+    display: block; 
+    position: relative;
+    width: 100%;
+    text-align:center;
+    font-size: 14px;
+    font-weight: bolder;
+    line-height: 1.5rem;
+    padding:4px 0;
+    background-color:#b7a00e;
+    border-radius:5px;
+    color:whitesmoke;
+}
+
+.seat.premium label {
+    display: block; 
+    position: relative;
+    width: 100%;
+    text-align:center;
+    font-size: 14px;
+    font-weight: bolder;
+    line-height: 1.5rem;
+    padding:4px 0;
+    background-color:#0eb752;
+    border-radius:5px;
+    color:whitesmoke;
+}
+
+.seat.economy label {
+    display: block; 
+    position: relative;
+    width: 100%;
+    text-align:center;
+    font-size: 14px;
+    font-weight: bolder;
+    line-height: 1.5rem;
+    padding:4px 0;
+    background-color:#054fb0;
+    border-radius:5px;
+    color:whitesmoke;
+}
+
+.seat .business label {background-color: rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important; color:black}
+
+.seat label:hover {cursor: pointer;box-shadow: 0 0 0px 2px green;}
+.seat input {position: absolute;}
+.seat input[type=checkbox]:checked + label {background: #656e65 !important;}
+.seat:nth-child(3){
+    margin-right:14%
+}
+ol{padding-left:0 !important}

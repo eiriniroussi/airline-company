@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reservation-table {
+            margin: 20px auto;
+            overflow-x: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th,
+        table td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #005f73;
+            color: #ffffff;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #e0f2fe;
+        }
+
+        table tbody tr:hover {
+            background-color: #b2ebf2;
+        }
+
+        .book-btn {
+            background-color: #008cba;
+            color: #ffffff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background-color: #007ba7;
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav_links a {
+                display: block;
+                margin: 5px 0;
+            }
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr {
+                border: 1px solid #ccc;
+            }
+
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+
+            td:before {
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                content: attr(data-label);
+            }
+        }
+
+        .no-flights-found {
+            background-color: #ffcccc;
+            /* Light red background for visibility */
+            color: #cc0000;
+            /* Darker red text for contrast */
+            font-size: 1.2em;
+            /* Slightly larger font size for emphasis */
+            text-align: center;
+            /* Center the text within the row */
+            padding: 20px 0;
+            /* Add some padding for better spacing */
+            border: 1px solid #cc0000;
+            /* A border to emphasize the message */
+        }
+
+        /* Optional: Add a hover effect to maintain consistency with other rows, or to make it clear that it is not clickable */
+        .no-flights-found:hover {
+            background-color: #ffe5e5;
+            /* Lighter red on hover for subtle feedback */
+        }
+
+        /* Style for the "Can't edit flight" button */
+        .cant-edit-btn {
+            background-color: #d9534f;
+            /* Bootstrap 'btn-danger' color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cant-edit-btn:hover {
+            background-color: #c9302c;
+            color: white;
+        }
+
+        .past-flight-row {
+            background-color: #b17676;
+        }
+
+        .past-flight-row:hover {
+            background-color: #ebcccc;
+        }
+
+        #yeap {
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        #paragraph {
+            font-weight: bold;
+            color: #160846;
+            font-size: 20px;
+            line-height: 1.5;
+            text-align: center;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+
+        <body>
+            <h1>Manage Flights</h1>
+            <p id="paragraph">You can only edit flights, that have not yet sold any tickets. <br>You can not change
+                flight
+                information for
+                flights that were completed in tha past</p>
+            <div class="reservation-table">
+                <table>
+                    <thead>
+
+                        <tr>
+                            <th>Flight Code</th>
+                            <th>Departure Airport</th>
+                            <th>Arrival Airport</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Economy</th>
+                            <th>Premium</th>
+                            <th>Business</th>
+                            <th>Flight Duration</th>
+                            <th>Available Seats</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="thisone">
+                        {% if flights %}
+                        {% for flight in flights %}
+                        <!-- Determine if the flight date has passed -->
+                        {% set is_past_flight = flight['dateOfFlight'] < current_date %} <tr
+                            class="{{ 'past-flight-row' if is_past_flight }}">
+                            <td>{{ flight['flightNumber'] }}</td>
+                            <td>{{ flight['departure'] }}</td>
+                            <td>{{ flight['destination'] }}</td>
+                            <td>{{ flight['dateOfFlight'] }}</td>
+                            <td>{{ flight['hourOfDeparture'] }}</td>
+                            <td>{{ flight['costEconomy'] }}</td>
+                            <td>{{ flight['costPremium'] }}</td>
+                            <td>{{ flight['costBusiness'] }}</td>
+                            <td>{{ flight['flightDuration'] }}</td>
+                            <td>{{ flight['seatsAvailable'] }}</td>
+                            <td>
+                                <!-- Adjust button based on seatsAvailable and if the flight date has passed -->
+                                {% if flight['seatsAvailable'] != 54 or is_past_flight %}
+                                <button class="cant-edit-btn" title="This flight cannot be edited">Can't Edit
+                                    Flight</button>
+                                {% else %}
+                                <button class="book-btn" id="yeap"
+                                    onclick="window.location.href='/edit_flight/{{ flight['flightNumber'] }}'">Edit
+                                    Flight</button>
+                                {% endif %}
+                            </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr class="no-flights-found">
+                                <td colspan="11">There were no flights based on this criteria</td>
+                            </tr>
+                            {% endif %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- Τέλος προσθήκης κώδικα -->
+            <br />
+    </main>
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+
+
+    <!-- MENU JS -->
+    <script src="../static/js/mobile-menu.js"></script>
+</body>
+
+</html>

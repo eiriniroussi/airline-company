@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #011c39;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #011c39;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+
+
+        <!-- Αρχή προσθήκης κώδικα -->
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cancellation of Reservation</title>
+            <link rel="stylesheet" href="styles.css">
+        </head>
+
+        <body>
+            <!-- {% if error %} -->
+            <p id="tempMessage"
+                style="color:white; text-align: center; font-size: 17px; font-weight: bold; border:1px solid red; background-color:red; padding:5px;">
+                The reservation was not found
+            </p>
+            <br>
+            <script>
+                // Wait for 15 seconds (15000 milliseconds) then hide the message
+                setTimeout(function () {
+                    document.getElementById('tempMessage').style.display = 'none';
+                }, 15000);
+            </script>
+            <!-- {% endif %} -->
+
+            <!-- {% if succ %} -->
+            <p id="tempMessage"
+                style="color:white; text-align: center; font-size: 17px; font-weight: bold; border:1px solid green; background-color:green; padding:5px;">
+                Reservation cancelled successfully. Points refunded (if applicable).
+            </p>
+            <br>
+            <script>
+                // Wait for 15 seconds (15000 milliseconds) then hide the message
+                setTimeout(function () {
+                    document.getElementById('tempMessage').style.display = 'none';
+                }, 15000);
+            </script>
+            <!-- {% endif %} -->
+            <div class="container">
+                <h1>Cancellation of Reservation</h1><br>
+                <form action="/cancel_reservation" method="post">
+                    <label for="booking_id">Reservation Code:</label>
+                    <input type="text" id="booking_id" name="booking_id" required>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" required><br><br>
+                    <button type="submit">Cancel Reservation</button>
+                </form>
+
+            </div>
+        </body>
+
+        </html>
+
+        <!-- Τέλος προσθήκης κώδικα -->
+        <br />
+    </main>
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+
+
+    <!-- MENU JS -->
+    <script src="../static/js/mobile-menu.js"></script>
+</body>
+
+</html>

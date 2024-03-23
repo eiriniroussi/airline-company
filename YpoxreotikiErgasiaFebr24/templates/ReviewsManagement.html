@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link rel="stylesheet" href="../static/css/ReviewsManagement.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Reviews Management</h2>
+        <div class="container mt-4">
+            <div class="admin-section">
+                <div class="filter-section">
+                    Filter by rating:
+                    <select id="filterRating">
+                        <option value="0">All Ratings</option>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                    </select>
+
+                </div>
+
+                <div class="pagination-controls">
+                    <button id="prevPage">Previous</button>
+                    <span id="pageIndicator">Page 1</span>
+                    <button id="nextPage">Next</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Review</th>
+                            <th>Rating</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.username }}</td>
+                            <td>{{ review.review }}</td>
+                            <td>{{ review.rating }} stars</td>
+                            <td><button class="btn-delete" data-review-id="{{ review._id }}">Delete</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function () {
+                const reviewId = this.getAttribute('data-review-id');
+                console.log("Attempting to delete review with ID:", reviewId);  // Confirm this logs the expected ID
+                fetch('/delete_review/' + reviewId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Delete response:", data);  // Check the response data
+                        if (data.success) {
+                            window.location.reload();  // Or more sophisticated handling
+                        }
+                    })
+                    .catch(error => console.error("Fetch error:", error));
+            });
+        });
+
+    </script>
+
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+    <!-- MENU JS -->
+    <script src="../static/js/nav.js"></script>
+    <script src="../static/js/table-sort-filter-pagination.js"></script>
+
+</html>

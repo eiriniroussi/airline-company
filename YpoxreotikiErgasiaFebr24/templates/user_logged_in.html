@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: align-items;
+        }
+
+        .btn_edit {
+            font-size: 16px;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 2800%;
+            /* Καθορίζει το ύψος της στήλης σε 100% του παραθύρου προβολής */
+            background-color: #110124;
+            color: #fff;
+            padding: 90px;
+            box-sizing: content-box;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .account-info img {
+            width: 40px;
+            /* Ορίζει το πλάτος της εικόνας */
+            height: 40px;
+            /* Ορίζει το ύψος της εικόνας */
+            margin-right: 10px;
+            border-radius: 50%;
+            /* Καθορίζει τον κυκλικό σχηματισμό της εικόνας */
+        }
+
+        .account-info span {
+            font-size: 19px;
+            /* Ορίζει το μέγεθος του κειμένου */
+        }
+
+        .sidebar button {
+            background-color: #011c39;
+            /* Χρώμα μπλε σκούρο */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 150px;
+            cursor: pointer;
+        }
+
+        .delete-account-container {
+            text-align: left;
+            margin-bottom: -2000px;
+            /* Add some bottom margin */
+        }
+
+        .delete-account-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #011c39;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 150px;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            max-width: 800px;
+            /* Ορίζει το μέγιστο πλάτος του περιεχομένου */
+            flex-grow: 1;
+            /* Καλύπτει το υπόλοιπο κενό χώρο στον ευέλικτο κόμβο (flex container) */
+        }
+
+
+        .content {
+            margin-left: 350px;
+
+        }
+
+        .content {
+            margin-top: -416px;
+        }
+
+
+        .user-details {
+            max-width: 2000px;
+            /* Αλλάζει το μέγιστο πλάτος της στήλης προσωπικών στοιχείων */
+            height: 200px;
+            /* Αλλάζει το ύψος της στήλης προσωπικών στοιχείων */
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .user-details div {
+            border: 2px solid #011c39;
+            /* Παραλληλόγραμμο οριοθέτησης για κάθε στοιχείο */
+            padding: 10px;
+            margin-bottom: 10px;
+            /* Κενό κάτω από κάθε παραλληλόγραμμο */
+            border-radius: 8px;
+            /* Κυκλικός σχηματισμός στις γωνίες */
+        }
+
+        h2 {
+            color: #011c39;
+        }
+
+        p {
+            color: #363535;
+        }
+
+        .reward-points {
+            display: inline-block;
+            background-color: #33a8ac;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            /* Make text bold */
+            text-decoration: none;
+            /* Remove underline from <a> tag */
+            margin: 10px 0;
+            /* Some margin for spacing */
+            font-size: 1em;
+            /* Adjust font size as needed */
+        }
+
+        /* Hover effect for the reward points link */
+        .reward-points:hover {
+            background-color: #e0cf4f;
+            /* Darker shade of green on hover */
+            color: #fff;
+            /* Keep text color white */
+            text-decoration: none;
+            /* Ensure no underline on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+        <!-- Αρχή προσθήκης κώδικα -->
+        <style>
+
+        </style>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <p id="tempMessage" class="flash-{{category}}"
+            style="color:white; text-align: center; font-size: 17px; font-weight: bold; border:1px solid green; background-color:green; padding:5px;">
+            {{ message }}
+        </p>
+        <script>
+            setTimeout(function () {
+                document.getElementById('tempMessage').style.display = 'none';
+            }, 15000);
+        </script>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <body>
+
+            <br>
+
+            <div class="sidebar">
+                <div class="account-info">
+                    <span style="font-size: 22px; font-weight: bold;">{{ full_name }}</span><br>
+                </div>
+                <a href="user_logged_in">My Account</a>
+                <a href="reviews">Create Review</a>
+                <a href="view_reservations_users">View Bookings</a>
+                <a href="cancel_reservation">Cancel Reservation</a>
+                <a class="reward-points">Reward Points: {{ points }}</a>
+                <span>&nbsp;</span>
+                <div class="delete-account-container" style="margin-bottom: 20px;">
+                    <button class="btn_edit" onclick="logout()">Log out</button>
+                    <br><a href="#" onclick="deleteAccount()">Delete Account</a>
+                </div>
+            </div>
+
+            <div class="content">
+                <h2>Welcome, {{ full_name }}!</h2>
+                <div class="user-details">
+                    <br>
+                    <div>
+                        <h3>Email: {{ session.get('user_email') }} </h3>
+                    </div>
+                    <div>
+                        <h3>Username: {{ username }}</h3>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="sidebar">
+
+                <script>
+                    function logout() {
+                        alert("You have logged out");
+                        // Redirect to the logout route
+                        window.location.href = "{{ url_for('logout') }}";
+                    }
+
+                    function deleteAccount() {
+                        const confirmed = confirm("Are you sure you want to delete your account? This cannot be undone.");
+                        if (confirmed) {
+                            window.location.href = "{{ url_for('delete_account') }}";
+                        }
+                    }
+                </script>
+                <br>
+        </body>
+        <!-- Τέλος προσθήκης κώδικα -->
+
+    </main>
+    <br /> <br />
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+
+
+    <!-- MENU JS -->
+    <script src="../static/js/mobile-menu.js"></script>
+</body>
+
+</html>

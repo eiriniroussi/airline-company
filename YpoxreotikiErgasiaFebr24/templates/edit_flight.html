@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title>DS Airlines - Edit Flight</title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --main-bg-color: #4CAF50;
+            --hover-bg-color: #45a049;
+            --border-color: #ccc;
+            --input-padding: 8px;
+            --form-max-width: 600px;
+            --border-radius: 5px;
+            --font-family: 'PT Sans', Arial, sans-serif;
+            --button-font-size: 16px;
+            --button-padding: 10px 20px;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .edit-flight-form {
+            max-width: var(--form-max-width);
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(192, 200, 221);
+        }
+
+        form {
+            padding: 10px;
+        }
+
+        .edit-flight-form label {
+            margin-bottom: 10px;
+        }
+
+        .edit-flight-form input[type="text"],
+        .edit-flight-form input[type="number"],
+        .edit-flight-form select,
+        .edit-flight-form input[type="date"],
+        .edit-flight-form input[type="time"] {
+            width: 100%;
+            padding: var(--input-padding);
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+        }
+
+        .edit-flight-form input[type="submit"] {
+            background-color: var(--main-bg-color);
+            color: white;
+            padding: var(--button-padding);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--button-font-size);
+            transition: background-color 0.3s;
+            /* Smooth transition for hover effect */
+        }
+
+        .edit-flight-form input[type="submit"]:hover {
+            background-color: var(--hover-bg-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .edit-flight-form {
+                padding: 10px;
+                max-width: 90%;
+            }
+
+            .edit-flight-form input[type="submit"] {
+                padding: var(--button-padding);
+            }
+        }
+
+        .edit-flight-form p {
+            font-family: 'PT Sans', sans-serif;
+            color: #333;
+            background-color: #f2f2f2;
+            padding: 15px;
+            border-left: 4px solid rgb(42, 154, 219);
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .edit-flight-form p:hover {
+            background-color: #e9e9e9;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .edit-flight-form input[readonly] {
+            background-color: #e0e0e0;
+            /* Light gray background */
+        }
+
+        #edit {
+            background-color: green;
+            border: 2px solid green;
+            font-weight: bold;
+        }
+
+        #edit:hover {
+            background-color: white;
+            color: green;
+            font-weight: bold;
+            border: 2px solid green;
+        }
+
+        #delete {
+            background-color: red;
+            border: 2px solid red;
+            font-weight: bold;
+        }
+
+        #delete:hover {
+            background-color: white;
+            color: red;
+            font-weight: bold;
+            border: 2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+        <h1>Edit Flight</h1>
+        <div class="edit-flight-form">
+            <p>To ensure the editing process is meaningful, the flight's unique code, departure and arrival airports,
+                and the flight date cannot be altered.</p>
+
+            <form action="{{ url_for('edit_flight', flightNumber=flight['flightNumber']) }}" method="post">
+                <label for="flightNumber">Flights Unique Code:</label>
+                <input type="text" id="flightNumber" name="flightNumber" value="{{ flight['flightNumber'] }}" readonly
+                    required>
+
+                <label for="departure">Departure Airport:</label>
+                <input type="text" id="departure" name="departure" value="{{ flight['departure'] }}" readonly required>
+
+                <label for="destination">Arrival Airport:</label>
+                <input type="text" id="destination" name="destination" value="{{ flight['destination'] }}" readonly
+                    required>
+
+                <label for="dateOfFlight">Date of Flight:</label>
+                <input type="date" id="dateOfFlight" name="dateOfFlight" value="{{ flight['dateOfFlight'] }}" readonly
+                    required>
+
+                <label for="hourOfDeparture">Time of Departure:</label>
+                <input type="time" id="hourOfDeparture" name="hourOfDeparture" value="{{ flight['hourOfDeparture'] }}"
+                    required>
+
+                <label for="costEconomy">Cost of Economy Position:</label>
+                <input type="number" id="costEconomy" name="costEconomy" value="{{ flight['costEconomy'] }}" required>
+
+                <label for="costPremium">Cost of Premium Position:</label>
+                <input type="number" id="costPremium" name="costPremium" value="{{ flight['costPremium'] }}" required>
+
+                <label for="costBusiness">Cost of Business Position:</label>
+                <input type="number" id="costBusiness" name="costBusiness" value="{{ flight['costBusiness'] }}"
+                    required>
+
+                <label for="flightDuration">Flight Duration (in minutes):</label>
+                <input type="number" id="flightDuration" name="flightDuration" value="{{ flight['flightDuration'] }}"
+                    required>
+
+                <input type="hidden" name="action" value="edit">
+                <input type="submit" name="submit" class="btn btn-primary" id="edit" value="Edit Flight" class="done">
+            </form>
+
+            <form action="{{ url_for('edit_flight', flightNumber=flight['flightNumber']) }}" method="post">
+                <input type="hidden" name="flightNumber" value="{{ flight['flightNumber'] }}">
+                <input type="hidden" name="action" value="delete">
+                <input type="submit" name="submit" class="btn btn-primary" id="delete" value="Delete Flight"
+                    class="done">
+            </form>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+    <!-- MENU JS -->
+    <script src="../static/js/mobile-menu.js"></script>
+</body>
+
+</html>

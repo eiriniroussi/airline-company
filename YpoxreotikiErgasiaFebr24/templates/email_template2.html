@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #b6ede7;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: left;
+            background-color: #c4e6e2;
+
+        }
+
+        h1 {
+            color: #08386c;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .booking-info,
+        .passenger-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .booking-info h2,
+        .passenger-info h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .booking-details p,
+        .passenger-details {
+            line-height: 1.8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        .passenger-details {
+            margin-top: 10px;
+        }
+
+        .passenger-details:not(:last-of-type) {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #000000;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Booking Confirmation</h1>
+        <div class="booking-info">
+            <h2>Your Trip Details</h2>
+            <div class="booking-details">
+                <p><strong>Booking ID:</strong> {{ booking.booking_code }}</p>
+                <p><strong>Flight Number:</strong> {{ booking.flightNumber }}</p>
+                <p><strong>From:</strong> {{ booking.flight_details.departure }}</p>
+                <p><strong>To:</strong> {{ booking.flight_details.destination }}</p>
+                <p><strong>Departure Date:</strong> {{ booking.flight_details.dateOfFlight }}</p>
+                <p><strong>Departure Time:</strong> {{ booking.flight_details.hourOfDeparture }}</p>
+                <p><strong>Total Cost:</strong> {{ booking.totalCost }}€</p>
+            </div>
+        </div>
+        <div class="passenger-info">
+            <h2>Passenger Details</h2>
+            {% for passenger in booking.passengers %}
+            <div class="passenger-details">
+                <p><strong>Name:</strong> {{ passenger.name }} {{ passenger.lastName }}</p>
+                <p><strong>Passport Number:</strong> {{ passenger.passportNumber }}</p>
+                <p><strong>Seat Number:</strong> {{ passenger.seatNumber }}</p>
+                <p><strong>Ticket Type:</strong> {{ passenger.ticketType }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="footer">
+            Thank you for choosing DS Airlines. Have a pleasant journey!
+        </div>
+    </div>
+</body>
+
+</html>

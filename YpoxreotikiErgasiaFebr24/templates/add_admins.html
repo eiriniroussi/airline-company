@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link rel="stylesheet" href="../static/css/AdminManagement.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+    <title> DS AIRLINES </title>
+    <link rel="icon" href="../static/img/tab_image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .precond {
+            font-size: 15px;
+            font-style: oblique;
+            font-weight: 900;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+            </div>
+            <!-- menu links -->
+            <ul class="nav_links">
+                <li><a href="/">Home</a></li>
+                <li><a href="search_flights">Flights</a></li>
+
+                <li><a href="aboutus">About Us</a></li>
+                <li><a href="contact">Contact Us</a></li>
+
+                {% if session.get('user_email') %}
+                <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+                {% elif session.get('admin_email') %}
+                <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Account</a></li>
+                {% endif %}
+            </ul>
+            <!-- end menu links -->
+
+
+            <div class="lines">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        {% if admin_not_created %}
+        <p id="tempMessage1"
+            style="color:white; text-align: center; font-size: 17px; font-weight: bold; border:1px solid red; background-color:red; padding:5px;">
+            A user already exists with the given email address.Try with another one </p>
+        <br>
+        <script>
+            // Wait for 15 seconds (15000 milliseconds) then hide the message
+            setTimeout(function () {
+                document.getElementById('tempMessage1').style.display = 'none';
+            }, 15000);
+        </script>
+        {% endif %}
+
+
+        <h2>Add admin</h2>
+        <div class="container mt-4">
+            <div class="admin-section">
+                <form id="adminForm" method="post">
+                    <!-- Full Name field -->
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <!-- Email field -->
+                    <label for="adminEmail">Email:</label>
+                    <input type="email" id="adminEmail" name="adminEmail" required
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    <!-- Password field -->
+                    <label for="adminPassword">Password:</label>
+                    <p class="precond">MINIMUM LENGTH 8 CHARACTERS, WITH MINIMUM 1 NUMBER</p>
+                    <input type="password" id="adminPassword" name="adminPassword" required pattern="(?=.*\d).{8,}">
+
+                    <!-- Role selection -->
+                    <label for="adminRole">Role:</label>
+                    <select id="adminRole" name="adminRole" required>
+                        <option value="">Select Role</option>
+                        <option value="superadmin">Super Admin</option>
+                        <option value="admin">Admin</option>
+                    </select>
+
+                    <!-- Submit button -->
+                    <input type="submit" value="Add Admin" class="btn">
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; Copyright 2024 | Designed by LM
+    </footer>
+
+    <!-- MENU JS -->
+    <script src="../static/js/nav.js"></script>
+
+</html>

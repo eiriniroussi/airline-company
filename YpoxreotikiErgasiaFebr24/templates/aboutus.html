@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/nav.css">
+  <link rel="stylesheet" href="../static/css/custom.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple">
+  <title> DS AIRLINES </title>
+  <link rel="icon" href="../static/img/tab_image.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    .btn-see-reviews {
+      padding: 10px 20px;
+      background-color: #007bff;
+      /* Blue shade */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 22px;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      outline: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      /* Subtle shadow for depth */
+    }
+
+    .btn-see-reviews:hover,
+    .btn-see-reviews:focus {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-see-reviews:active {
+      background-color: #004085;
+      transform: translateY(1px);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .newsletter-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    /* Form styling */
+    .newsletter-container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    button[type="submit"] {
+      cursor: pointer;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .newsletter-container {
+        padding: 15px;
+      }
+
+      label,
+      input[type="text"],
+      input[type="email"],
+      button[type="submit"] {
+        font-size: 14px;
+      }
+
+      button[type="submit"] {
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <a href="/"> <span style="color:cyan">DS</span>Airlines</a>
+
+      </div>
+      <!-- menu links -->
+      <ul class="nav_links">
+        <li><a href="/">Home</a></li>
+        <li><a href="search_flights">Flights</a></li>
+
+        <li><a href="aboutus">About Us</a></li>
+        <li><a href="contact">Contact Us</a></li>
+
+        {% if session.get('user_email') %}
+        <li><a href="{{ url_for('user_logged_in') }}">My Account</a></li>
+        {% elif session.get('admin_email') %}
+        <li><a href="{{ url_for('admin_logged_in') }}">View Account</a></li>
+        {% else %}
+        <li><a href="{{ url_for('login') }}">Account</a></li>
+        {% endif %}
+      </ul>
+      <!-- end menu links -->
+
+
+      <div class="lines">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <br>
+    <!-- Αρχή προσθήκης κώδικα -->
+    <!---Carousel-->
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel" style="height:500px">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"
+          aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="bd-placeholder-img carousel-img" src="/static/img/Discover_Airlines_A330.jpg" width="100%"
+            xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"
+            style="max-height:600px"></img>
+
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <h1>Connecting DS with the world and the world with DS</h1>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="bd-placeholder-img carousel-img" src="/static/img/cover3.png" width="100%"
+            xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"
+            style="max-height:600px"></img>
+          <div class="container">
+            <div class="carousel-caption" style="margin-bottom:150px">
+              <h1 class="text-end">Great deals to your beloved destinations</h1>
+              <p class="text-end">Enjoy the finest onboard service, looked after by our expert crew.</p>
+              <p class="text-end"><a class="btn btn-lg btn-primary" href="search_flights">Book your flights</a></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <!---Features-->
+    <div class="container marketing mg-top-bottom">
+
+      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
+            style="background-image: url(../static/img/tropical-forest-bali-aerial_16-9.avif);">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">DS Better World</h2>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="me-auto">
+                  <p></p>
+                </li>
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                  <small>Earth</small>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>3d</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
+            style="background-image: url(../static/img/ib-handling.webp);">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">We’re proud to be part of the International Airlines
+                Group.</h2>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="me-auto">
+                  <p></p>
+                </li>
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                  <small>Company</small>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>4d</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
+            style="background-image: url(../static/img/club-world-cabin-crew-customer-business_21-9.avif);">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">DS exists today because of you</h2>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="me-auto">
+                  <p></p>
+                </li>
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                  <small></small>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>5d</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="seeOurReviews" class="btn-see-reviews">See Our Reviews</button>
+
+      <script>
+        document.getElementById('seeOurReviews').addEventListener('click', function () {
+          window.location.href = 'view_reviews';
+        });
+      </script>
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider mg-top-bottom">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Planet. <span class="text-muted">Climate.</span></h2>
+          <p class="lead">At DS Airlines, we care about the impact of every flight. That’s why we’re driving urgent
+            action towards net zero emissions. We have a long history of managing and reducing our carbon emissions and
+            a clear roadmap to achieving net zero carbon emissions by 2050, with ambitious short, medium and long-term
+            initiatives to achieve our goals.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="bd-placeholder-img carousel-img featurette-image img-fluid mx-auto"
+            src="/static/img/tropical-forest-bali-aerial_16-9.avif" width="100%" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false" style="max-height:600px"></img>
+
+        </div>
+      </div>
+
+      <hr class="featurette-divider mg-top-bottom">
+
+      <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading">More than a flight. <span class="text-muted">More than an experience.</span>
+          </h2>
+          <p class="lead">The DS Airlines Experience is more than a flight. It’s about making every single journey as
+            special and original as you are, whatever your reason to travel. We’re always here to help you feel relaxed
+            and secure from the airport to boarding and beyond.</p>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <img class="bd-placeholder-img carousel-img featurette-image img-fluid mx-auto"
+            src="/static/img/club-world-cabin-crew-customer-business_21-9.avif" width="100%"
+            xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"
+            style="max-height:600px"></img>
+        </div>
+      </div>
+
+      <hr class="featurette-divider mg-top-bottom">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Partners and alliances. <span class="text-muted">Different brands, same
+              outstanding service.</span></h2>
+          <p class="lead">We think you should be able to make all your travel plans in one place, and not have to worry
+            about things like connections and timetables. That's why we have arrangements with a selection of other
+            airlines, to extend the number of destinations we offer and enhance the benefits to you. You can book it all
+            right here on dsairlines.com.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="bd-placeholder-img carousel-img featurette-image img-fluid mx-auto"
+            src="/static/img/Discover_Airlines_A330.jpg" width="100%" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false" style="max-height:600px"></img>
+
+        </div>
+      </div>
+
+      <hr class="featurette-divider mg-top">
+
+      <!-- /END THE FEATURETTES -->
+      <div class="newsletter-container">
+        <h2>Subscribe to Our Newsletter</h2> <br>
+        <form action="/subscribe_newsletter" method="post">
+          <label for="name">Your Name:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="email">Your Email:</label>
+          <input type="email" id="email" name="email" required>
+
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+
+
+    <!-- Τέλος προσθήκης κώδικα -->
+
+  </main>
+
+  <footer>
+    &copy; Copyright 2024 | Designed by LM
+  </footer>
+
+
+
+  <!-- MENU JS -->
+  <script src="../static/js/mobile-menu.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
