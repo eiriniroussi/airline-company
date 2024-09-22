@@ -1,114 +1,80 @@
-DS Airlines
+# Ergasia_Febrouariou
+# DS Airlines
+
 Mandatory assignment for the course "Information Systems"
 Department of Digital Systems, University of Piraeus
 
-Application Execution
-To run the web service on someone's computer, Docker and Docker Compose must be installed.
+## Application Execution
+To run the web service on someone's computer, Docker and Docker Compose must be installed.     
 
-Installation on WINDOWS systems
-(Docker Compose is already included in Docker for Windows)
-You can download the executable file to install Docker from here: Install Docker Desktop on Windows
+### Installation on WINDOWS systems
+###### (Docker Compose is already included in Docker for Windows)
 
-Installation on LINUX systems
+You can download the executable file to install Docker from here: [Install Docker Desktop on Windows](https://docs.docker.com/desktop/install/windows-install/)  
+
+### Installation on LINUX systems
 Simply run the following commands in the terminal:
+1. `sudo apt-get update`
+2. `sudo apt install -y apt-transport-https ca-certificates curl
+software-properties-common`
+3. `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key
+add - `
+4. `sudo add-apt-repository -y "deb [arch=amd64]
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"`
+5. `sudo apt-get update`
+6. `sudo apt install docker-ce`
+7. ``` sudo curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname-s`-`uname -m` -o /usr/local/bin/docker-compose ```
+8. ` sudo chmod +x /usr/local/bin/docker-compose`
 
-bash
-Αντιγραφή κώδικα
-sudo apt-get update
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get update
-sudo apt install docker-ce
-sudo curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-Application Requirements
-The web service will run on port 5000 via Flask, and MongoDB will run on port 27017. If there are other services running on these ports, they need to be stopped.
+## Application Requirements
+The web service will run on port 5000 via Flask, and MongoDB will run on port 27017. If another service is running on these ports, it must be stopped.
 
-A database named DS_Airlines has been created in MongoDB.
+A database named DS_Airlines has been created in MongoDB.** 
 
-Running the Application
-Download the .zip file from this repository.
-Unzip it on your computer.
-Rename the folder and remove the -main suffix from the folder name.
-Open the terminal at the path: YpoxreotikiErgasiaFebr24
-Run the following command to create the container:
-bash
-Αντιγραφή κώδικα
-(sudo) docker-compose up -d
-To stop the application, run:
-bash
-Αντιγραφή κώδικα
-(sudo) docker-compose down
-Open your preferred browser and access the web service via the following link:
-http://localhost:5000/
-MongoDB
-Navigate to the path: YpoxreotikiErgasiaSept22_E19226_Loulaki_Marina
+## Running the Application
+* Download the .zip file from this repository.
+* Unzip it on your computer.
+* Rename the folder and remove the -main suffix from the folder name.
+* Open the terminal at the path: **YpoxreotikiErgasiaFebr24**
+* Run the following command to create the container: ` (sudo) docker-compose up -d `
+* To stop the application, run: ` (sudo) docker-compose down `
+* Open your preferred browser and access the web service via: http://localhost:5000/
 
-To use the Mongo Shell, run the following command in PowerShell/Terminal:
+* ## MongoDB
 
-bash
-Αντιγραφή κώδικα
-(sudo) docker exec -it mongodb mongo
-To use the database that has been created, execute the command:
+You must be in the path: YpoxreotikiErgasiaSept22_E19226_Loulaki_Marina 
 
-bash
-Αντιγραφή κώδικα
-use DS_Airlines
-To display the collections, use the command:
+* To use the Mongo Shell, execute the following command in PowerShell/Terminal: `(sudo) docker exec -it mongodb mongo`
+* To use the database that has been created, run: ` use DS_Airlines `
+* To display the collections, run: ` show collections `
+* To display all user records, run: ` db.users.find({}) `
+* To display all flights created by the admin, run: ` db.flights.find({}) `
+* To display all reservations made by users, run: ` db.reservations.find({}) `
+* To display all cancellations made by users with pending refunds, run: ` db.refund.find({}) `
+* You can do the same for all collections.
+* To display the output in a more readable format, append .pretty() at the end of each find command, like this: `.pretty() `
 
-bash
-Αντιγραφή κώδικα
-show collections
-To display all user records, execute:
+#### The database already contains stored data for users, flights, reviews, reservations, communication messages, registered newsletter users, and canceled reservations. ####
 
-bash
-Αντιγραφή κώδικα
-db.users.find({})
-To display all flights created by the admin, execute:
 
-bash
-Αντιγραφή κώδικα
-db.flights.find({})
-To display all reservations made by users, execute:
+## Flask
 
-bash
-Αντιγραφή κώδικα
-db.reservations.find({})
-To display all cancellations made by users with pending refunds, execute:
+* To run Flask, execute the following command from PowerShell/Terminal (from the directory folder):  ` docker exec -it flask /bin/bash `
 
-bash
-Αντιγραφή κώδικα
-db.refund.find({})
-You can do the same with all collections.
+## Containerize Web Service
 
-If you want the output to be more readable, add .pretty() at the end of each find command, like this:
+* To create the image, run the following command: ` docker build -t ds_airlines .`
+* To see the available images, run: ` docker images `
+* To delete an image, run: ` docker rmi (imageid) `
 
-bash
-Αντιγραφή κώδικα
-db.users.find({}).pretty()
-The database already contains data related to users, flights, reviews, reservations, communication messages, registered newsletter users, and canceled reservations.
 
-Flask
-To execute Flask, run the following command from PowerShell/Terminal (from the project directory):
-bash
-Αντιγραφή κώδικα
-docker exec -it flask /bin/bash
-Containerize Web Service
-To create the image, execute the following command:
-bash
-Αντιγραφή κώδικα
-docker build -t ds_airlines .
-To see the available images, run:
-bash
-Αντιγραφή κώδικα
-docker images
-If you want to delete an image, run:
-bash
-Αντιγραφή κώδικα
-docker rmi (imageid)
-Data
-All application data, in addition to being stored in the container, are also saved in a local folder named data. This folder is created automatically when the command docker-compose up -d is executed, ensuring that data is not lost in case something happens to the database container.
+# Data
+
+All application data, in addition to being stored in the container, is also saved in a local folder called data, which is automatically created when you run the command:
+
+ `docker-compose up -d `
+
+This ensures that the data is not deleted if something happens to the database container.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
